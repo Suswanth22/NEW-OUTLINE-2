@@ -1,0 +1,3172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motor Outline Dimension Database</title>
+  <style>
+    :root {
+      --primary: #003366;
+      --accent: #005BAC;
+      --bg: #F4F7FA;
+      --card: #FFFFFF;
+      --card-2: #F9FBFD;
+      --text: #172635;
+      --muted: #66788A;
+      --line: #D7E2EC;
+      --success: #198754;
+      --danger: #D9534F;
+      --warning: #F0AD4E;
+      --shadow-1: 0 10px 24px rgba(0, 51, 102, 0.08);
+      --shadow-2: 0 18px 40px rgba(0, 51, 102, 0.14);
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+
+    body[data-theme="light"] {
+      --primary: #24496E;
+      --accent: #2D79C6;
+      --bg: #F7FAFD;
+      --card: #FFFFFF;
+      --card-2: #F4F8FB;
+      --text: #172635;
+      --muted: #6B7E90;
+      --line: #D7E2EC;
+    }
+
+    body[data-theme="dark"] {
+      --primary: #0D2E4D;
+      --accent: #2E8FE6;
+      --bg: #0E1722;
+      --card: #162230;
+      --card-2: #111C28;
+      --text: #E8F0F7;
+      --muted: #9CB0C4;
+      --line: #2B3B4D;
+      --shadow-1: 0 10px 24px rgba(0, 0, 0, 0.32);
+      --shadow-2: 0 18px 40px rgba(0, 0, 0, 0.42);
+    }
+
+    body[data-theme="engineering"] {
+      --primary: #003366;
+      --accent: #005BAC;
+      --bg: #F4F7FA;
+      --card: #FFFFFF;
+      --card-2: #F9FBFD;
+      --text: #172635;
+      --muted: #66788A;
+      --line: #D7E2EC;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background:
+        radial-gradient(circle at top right, rgba(0, 91, 172, 0.18), transparent 28%),
+        linear-gradient(135deg, var(--primary), #001f3f);
+      color: #fff;
+      padding: 22px 22px 18px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .topbar-inner, .nav, .main, .footer {
+      max-width: 1500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .brand-block {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .brand-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--accent), #2ea4ff);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.76rem;
+      opacity: 0.84;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.08;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      opacity: 0.92;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      transition: all 0.22s ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: #fff;
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .main {
+      flex: 1;
+      padding: 22px;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeUp 0.28s ease;
+    }
+
+    .page-section.active { display: block; }
+
+    .section-head {
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-1);
+      padding: 18px;
+      margin-bottom: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .panel:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-2);
+    }
+
+    .mini-panel { margin-bottom: 0; }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 1.06rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-1);
+      padding: 18px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-2);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+      font-size: 1.25rem;
+    }
+
+    .stat-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.8rem;
+      margin-top: 2px;
+    }
+
+    .dashboard-grid,
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+
+    .stack-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stack-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-2);
+    }
+
+    .stack-item small {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .chart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .chart-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .chart-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.94rem;
+    }
+
+    .bar {
+      height: 10px;
+      background: #e8eef5;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    body[data-theme="dark"] .bar { background: #1a2837; }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #35a0ff);
+    }
+
+    .dropzone {
+      min-height: 260px;
+      border-radius: 18px;
+      border: 2px dashed #8ab6df;
+      background: linear-gradient(180deg, rgba(0, 91, 172, 0.04), rgba(0, 91, 172, 0.01));
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      transition: all 0.25s ease;
+    }
+
+    .dropzone.dragover {
+      transform: scale(1.005);
+      border-color: var(--accent);
+      background: rgba(0, 91, 172, 0.08);
+    }
+
+    .dropzone-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+      font-size: 2rem;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .search-wrap { position: relative; }
+
+    .search-input,
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-input:focus,
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(0, 91, 172, 0.12);
+    }
+
+    .suggestions {
+      list-style: none;
+      margin: 8px 0 0;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: var(--shadow-2);
+      position: absolute;
+      width: 100%;
+      z-index: 10;
+      max-height: 280px;
+      overflow: auto;
+    }
+
+    .suggestions li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .suggestions li:hover { background: var(--card-2); }
+    .hidden { display: none !important; }
+
+    .results-grid { display: grid; gap: 16px; }
+    .result-card { animation: fadeUp 0.28s ease; }
+
+    .result-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .result-head h3 {
+      margin: 0;
+      font-size: 1.24rem;
+    }
+
+    .result-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(100px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .meta-box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--card-2);
+    }
+
+    .meta-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+    }
+
+    .meta-box strong {
+      font-size: 0.96rem;
+      word-break: break-word;
+    }
+
+    .badge-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .badge {
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card-2);
+      color: var(--primary);
+      font-size: 0.88rem;
+    }
+
+    .badge.success {
+      background: rgba(25, 135, 84, 0.10);
+      border-color: rgba(25, 135, 84, 0.28);
+      color: var(--success);
+    }
+
+    .badge.danger {
+      background: rgba(217, 83, 79, 0.10);
+      border-color: rgba(217, 83, 79, 0.28);
+      color: var(--danger);
+    }
+
+    .badge.neutral { color: var(--text); }
+
+    .compare-controls,
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .filters-grid {
+      grid-template-columns: repeat(4, minmax(200px, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .action-align {
+      display: flex;
+      align-items: end;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .toolbar-group,
+    .settings-actions,
+    .theme-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow: auto;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table th {
+      position: sticky;
+      top: 0;
+      background: var(--card-2);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .empty-row,
+    .empty-box {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px 12px;
+    }
+
+    .btn,
+    .theme-btn,
+    .icon-btn {
+      border-radius: 10px;
+      border: 1px solid transparent;
+      padding: 11px 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover,
+    .theme-btn:hover,
+    .icon-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(0, 91, 172, 0.2);
+    }
+
+    .btn-secondary {
+      background: var(--card-2);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ee6a67, var(--danger));
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 8px 10px;
+      font-size: 0.88rem;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      background: var(--card-2);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .theme-btn {
+      background: var(--card-2);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .theme-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+    }
+
+    .progress {
+      width: 150px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #e9eef5;
+    }
+
+    body[data-theme="dark"] .progress { background: #1b2937; }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #35a0ff);
+      transition: width 0.25s ease;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      background: var(--card-2);
+      font-size: 0.88rem;
+    }
+
+    .status-pill.success {
+      color: var(--success);
+      background: rgba(25, 135, 84, 0.10);
+      border-color: rgba(25, 135, 84, 0.28);
+    }
+
+    .status-pill.error {
+      color: var(--danger);
+      background: rgba(217, 83, 79, 0.10);
+      border-color: rgba(217, 83, 79, 0.28);
+    }
+
+    .action-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer {
+      padding: 24px 22px 30px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .footer p { margin: 4px 0; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 18, 31, 0.62);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-window {
+      position: relative;
+      z-index: 1;
+      width: min(1540px, calc(100vw - 20px));
+      max-height: calc(100vh - 20px);
+      overflow: auto;
+      margin: 10px auto;
+      background: var(--bg);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .detail-topbar {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 16px;
+    }
+
+    .detail-left,
+    .detail-right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .text-box {
+      white-space: pre-wrap;
+      line-height: 1.6;
+      min-height: 90px;
+    }
+
+    .viewer-panel { height: 100%; }
+
+    .viewer-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .viewer-status {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+    }
+
+    .viewer-layout {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      min-height: 720px;
+    }
+
+    .thumbnail-sidebar {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card-2);
+      padding: 8px;
+      overflow: auto;
+      max-height: 72vh;
+    }
+
+    .thumb-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 6px;
+      margin-bottom: 8px;
+      background: var(--card);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .thumb-item:hover,
+    .thumb-item.active {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-1);
+    }
+
+    .thumb-item canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fff;
+    }
+
+    .thumb-label {
+      text-align: center;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .viewer-stage {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: auto;
+      background:
+        linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.02) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.02) 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+      display: grid;
+      place-items: start center;
+      min-height: 720px;
+    }
+
+    #pdfCanvas {
+      background: #fff;
+      box-shadow: 0 18px 34px rgba(0, 0, 0, 0.16);
+      margin: 14px auto;
+    }
+
+    .toast-area {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      min-width: 260px;
+      max-width: 420px;
+      color: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-2);
+      animation: fadeUp 0.25s ease;
+    }
+
+    .toast.success { background: linear-gradient(135deg, #2fa06d, var(--success)); }
+    .toast.error { background: linear-gradient(135deg, #ea6b68, var(--danger)); }
+    .toast.info { background: linear-gradient(135deg, #2f80ca, var(--accent)); }
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      z-index: 110;
+      background: rgba(5, 16, 28, 0.5);
+      display: grid;
+      place-items: center;
+    }
+
+    .loading-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px 28px;
+      box-shadow: var(--shadow-2);
+      text-align: center;
+    }
+
+    .spinner {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      border: 5px solid rgba(0, 91, 172, 0.18);
+      border-top-color: var(--accent);
+      animation: spin 0.9s linear infinite;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .compare-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .preview-box {
+      min-height: 280px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-2);
+      display: grid;
+      place-items: center;
+      overflow: auto;
+    }
+
+    .preview-box canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .diff-table tr.same td { background: rgba(25, 135, 84, 0.08); }
+    .diff-table tr.changed td { background: rgba(217, 83, 79, 0.08); }
+    .diff-table tr.missing td { background: rgba(240, 173, 78, 0.12); }
+
+    .text-right { text-align: right; }
+    .mt-12 { margin-top: 12px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1250px) {
+      .stats-grid { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+      .dashboard-grid,
+      .settings-grid,
+      .detail-grid,
+      .compare-grid { grid-template-columns: 1fr; }
+
+      .detail-topbar,
+      .meta-grid { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
+
+      .filters-grid,
+      .compare-controls { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+    }
+
+    @media (max-width: 820px) {
+      .main, .topbar, .footer {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .stats-grid,
+      .filters-grid,
+      .compare-controls,
+      .detail-topbar,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-btn {
+        flex: 1 1 calc(50% - 10px);
+        text-align: center;
+      }
+
+      .viewer-layout {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .thumbnail-sidebar {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: none;
+      }
+
+      .thumb-item {
+        min-width: 110px;
+        margin-bottom: 0;
+      }
+
+      .viewer-stage { min-height: 420px; }
+
+      .modal-window {
+        width: calc(100vw - 10px);
+        margin: 5px auto;
+        max-height: calc(100vh - 10px);
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="engineering">
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-block">
+          <div class="brand-icon">M</div>
+          <div>
+            <p class="eyebrow">Engineering Drawing Management</p>
+            <h1>Motor Outline Dimension Database</h1>
+            <p class="subtitle">Search and Analyze SolidWorks Outline Drawings</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn btn-primary" id="headerUploadBtn">Upload Drawings</button>
+          <button class="btn btn-secondary" data-nav-target="search">Search Database</button>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main Navigation">
+        <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+        <button class="nav-btn" data-section="upload">Upload Drawings</button>
+        <button class="nav-btn" data-section="search">Search</button>
+        <button class="nav-btn" data-section="compare">Compare</button>
+        <button class="nav-btn" data-section="database">Database</button>
+        <button class="nav-btn" data-section="settings">Settings</button>
+      </nav>
+    </header>
+
+    <main class="main">
+      <section class="page-section active" id="dashboard">
+        <div class="section-head">
+          <div>
+            <h2>Dashboard</h2>
+            <p>Professional overview of uploaded outline drawings, extracted dimensions, and revision status.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div>
+              <span>Total Drawings</span>
+              <strong id="statTotal">0</strong>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon">🧩</div>
+            <div>
+              <span>Frames Available</span>
+              <strong id="statFrames">0</strong>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon">📐</div>
+            <div>
+              <span>Dimensions Extracted</span>
+              <strong id="statDimensions">0</strong>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon">⏱</div>
+            <div>
+              <span>Recent Uploads</span>
+              <strong id="statRecent">0</strong>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon">🔁</div>
+            <div>
+              <span>Latest Revision</span>
+              <strong id="statRevision">-</strong>
+            </div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Recent Drawings</h3>
+            </div>
+            <div id="recentList" class="stack-list empty-box">No drawings uploaded yet.</div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Frame Distribution</h3>
+            </div>
+            <div id="frameChart" class="chart-list empty-box">No frame data available.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="upload">
+        <div class="section-head">
+          <div>
+            <h2>Upload Drawings</h2>
+            <p>Drag and drop SolidWorks-generated PDF outline drawings for parsing, indexing, and browser storage.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="dropzone" id="dropzone">
+            <input type="file" id="pdfInput" accept="application/pdf,.pdf" multiple hidden />
+            <div class="dropzone-icon">⬆</div>
+            <h3>Drag and drop PDF drawings here</h3>
+            <p>Only PDF files are accepted. Multiple files are supported.</p>
+            <button class="btn btn-primary" id="browseBtn">Browse PDF Files</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Upload Queue</h3>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Drawing Number</th>
+                  <th>Status</th>
+                  <th>Revision</th>
+                  <th>Frame</th>
+                  <th>Upload Time</th>
+                  <th>Progress</th>
+                </tr>
+              </thead>
+              <tbody id="uploadBody">
+                <tr>
+                  <td colspan="7" class="empty-row">No uploads yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="search">
+        <div class="section-head">
+          <div>
+            <h2>Search</h2>
+            <p>Instantly search by Drawing Number, Frame, Description, or Revision.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="search-wrap">
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="Search Drawing Number... Example: SS550023"
+              autocomplete="off"
+            />
+            <ul id="suggestions" class="suggestions hidden"></ul>
+          </div>
+        </div>
+
+        <div id="searchResults" class="results-grid">
+          <div class="empty-box">No drawing found. Start typing to search the database.</div>
+        </div>
+      </section>
+
+      <section class="page-section" id="compare">
+        <div class="section-head">
+          <div>
+            <h2>Compare Drawings</h2>
+            <p>Select two drawings and compare dimension tables side by side with difference highlighting.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="compare-controls">
+            <div class="field">
+              <label for="compareA">Drawing A</label>
+              <select id="compareA"></select>
+            </div>
+            <div class="field">
+              <label for="compareB">Drawing B</label>
+              <select id="compareB"></select>
+            </div>
+            <div class="field action-align">
+              <button class="btn btn-primary" id="compareBtn">Compare</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="compareOutput">
+          <div class="empty-box">Select two drawings to compare.</div>
+        </div>
+      </section>
+
+      <section class="page-section" id="database">
+        <div class="section-head">
+          <div>
+            <h2>Database</h2>
+            <p>Search, filter, manage, open, compare, delete, and export uploaded drawings.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="filters-grid">
+            <div class="field">
+              <label for="filterDrawing">Drawing Number</label>
+              <input type="text" id="filterDrawing" placeholder="e.g. SS550023" />
+            </div>
+            <div class="field">
+              <label for="filterFrame">Frame</label>
+              <select id="filterFrame">
+                <option value="">All Frames</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="filterRevision">Revision</label>
+              <select id="filterRevision">
+                <option value="">All Revisions</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="filterDescription">Description</label>
+              <input type="text" id="filterDescription" placeholder="Description keyword" />
+            </div>
+            <div class="field">
+              <label for="filterDate">Date</label>
+              <input type="text" id="filterDate" placeholder="09-26-2003" />
+            </div>
+            <div class="field">
+              <label for="filterDimensionName">Dimension Name</label>
+              <input type="text" id="filterDimensionName" placeholder="B, C, 2F..." />
+            </div>
+            <div class="field">
+              <label for="filterDimensionValue">Dimension Value</label>
+              <input type="text" id="filterDimensionValue" placeholder="28.25" />
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-group">
+              <button class="btn btn-secondary" id="exportExcelBtn">Export Excel</button>
+              <button class="btn btn-secondary" id="exportCsvBtn">Export CSV</button>
+              <button class="btn btn-secondary" id="exportJsonBtn">Export JSON</button>
+              <button class="btn btn-secondary" id="printBtn">Print</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Drawing Number</th>
+                  <th>Frame</th>
+                  <th>Revision</th>
+                  <th>Description</th>
+                  <th>Upload Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="databaseBody">
+                <tr>
+                  <td colspan="6" class="empty-row">No drawings stored.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="settings">
+        <div class="section-head">
+          <div>
+            <h2>Settings</h2>
+            <p>Theme options and database utilities.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Theme</h3>
+            </div>
+            <div class="theme-grid">
+              <button class="theme-btn active" data-theme-choice="engineering">Engineering Blue Theme</button>
+              <button class="theme-btn" data-theme-choice="light">Light Mode</button>
+              <button class="theme-btn" data-theme-choice="dark">Dark Mode</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Database Tools</h3>
+            </div>
+            <div class="settings-actions">
+              <button class="btn btn-secondary" id="settingsExportExcelBtn">Export Excel</button>
+              <button class="btn btn-secondary" id="settingsExportCsvBtn">Export CSV</button>
+              <button class="btn btn-secondary" id="settingsExportJsonBtn">Export JSON</button>
+              <button class="btn btn-secondary" id="settingsPrintBtn">Print</button>
+              <button class="btn btn-secondary" id="importBtn">Import Database</button>
+              <button class="btn btn-danger" id="clearBtn">Clear Database</button>
+              <input type="file" id="importInput" accept=".json,application/json" hidden />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p><strong>Motor Outline Dimension Database</strong></p>
+      <p>Developed for Engineering Drawing Management</p>
+    </footer>
+  </div>
+
+  <div class="modal hidden" id="detailModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-window">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Drawing Preview</p>
+          <h3 id="detailHeading">Drawing Details</h3>
+        </div>
+        <button class="icon-btn" id="closeModalBtn" title="Close">✕</button>
+      </div>
+
+      <div class="detail-topbar" id="detailMeta"></div>
+
+      <div class="detail-grid">
+        <div class="detail-left">
+          <div class="panel mini-panel">
+            <div class="panel-head">
+              <h3>Dimension Table</h3>
+            </div>
+            <div class="field">
+              <label for="dimensionSearch">Search Within Extracted Dimensions</label>
+              <input type="text" id="dimensionSearch" placeholder="Search dimension name or value..." />
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Dimension</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="detailDimensionBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel mini-panel">
+            <div class="panel-head">
+              <h3>General Dimensions</h3>
+            </div>
+            <div class="badge-wrap" id="generalDimensions"></div>
+          </div>
+
+          <div class="panel mini-panel">
+            <div class="panel-head">
+              <h3>Notes</h3>
+            </div>
+            <div class="text-box" id="detailNotes"></div>
+          </div>
+
+          <div class="panel mini-panel">
+            <div class="panel-head">
+              <h3>Title Block</h3>
+            </div>
+            <div class="text-box" id="detailTitleBlock"></div>
+          </div>
+        </div>
+
+        <div class="detail-right">
+          <div class="panel viewer-panel">
+            <div class="panel-head">
+              <h3>PDF Viewer</h3>
+            </div>
+
+            <div class="viewer-toolbar">
+              <button class="btn btn-secondary btn-sm" id="prevPageBtn">Prev</button>
+              <button class="btn btn-secondary btn-sm" id="nextPageBtn">Next</button>
+              <button class="btn btn-secondary btn-sm" id="zoomInBtn">Zoom In</button>
+              <button class="btn btn-secondary btn-sm" id="zoomOutBtn">Zoom Out</button>
+              <button class="btn btn-secondary btn-sm" id="fitWidthBtn">Fit Width</button>
+              <button class="btn btn-secondary btn-sm" id="fitPageBtn">Fit Page</button>
+              <button class="btn btn-secondary btn-sm" id="rotateBtn">Rotate</button>
+              <button class="btn btn-secondary btn-sm" id="downloadBtn">Download PDF</button>
+              <button class="btn btn-secondary btn-sm" id="fullscreenBtn">Fullscreen</button>
+            </div>
+
+            <div class="viewer-status">
+              <span id="pageInfo">Page 1 / 1</span>
+            </div>
+
+            <div class="viewer-layout">
+              <aside class="thumbnail-sidebar" id="thumbnailSidebar"></aside>
+              <div class="viewer-stage" id="viewerStage">
+                <canvas id="pdfCanvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-area" id="toastArea"></div>
+
+  <div class="loading hidden" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p>Processing PDF drawings...</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    const APP_DB = {
+      NAME: "motor_outline_dimension_database_v2_single",
+      VERSION: 1,
+      STORE: "drawings"
+    };
+
+    const LOCAL_KEYS = {
+      THEME: "modd_theme_v2_single"
+    };
+
+    const state = {
+      db: null,
+      drawings: [],
+      currentDetailId: null,
+      compareA: "",
+      compareB: "",
+      viewer: {
+        pdfDoc: null,
+        drawing: null,
+        pageNum: 1,
+        pageCount: 1,
+        rotation: 0,
+        scale: 1.2,
+        fitMode: "width"
+      }
+    };
+
+    const el = {};
+
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+
+    async function init() {
+      cacheElements();
+      bindEvents();
+      applyTheme(localStorage.getItem(LOCAL_KEYS.THEME) || "engineering", false);
+
+      try {
+        state.db = await openDatabase();
+        state.drawings = await getAllDrawings();
+      } catch (error) {
+        console.error(error);
+        toast("IndexedDB could not be initialized.", "error");
+      }
+
+      renderAll();
+    }
+
+    function cacheElements() {
+      el.navButtons = document.querySelectorAll(".nav-btn");
+      el.sections = document.querySelectorAll(".page-section");
+      el.headerUploadBtn = document.getElementById("headerUploadBtn");
+      el.dropzone = document.getElementById("dropzone");
+      el.pdfInput = document.getElementById("pdfInput");
+      el.browseBtn = document.getElementById("browseBtn");
+      el.uploadBody = document.getElementById("uploadBody");
+      el.searchInput = document.getElementById("searchInput");
+      el.suggestions = document.getElementById("suggestions");
+      el.searchResults = document.getElementById("searchResults");
+      el.compareA = document.getElementById("compareA");
+      el.compareB = document.getElementById("compareB");
+      el.compareBtn = document.getElementById("compareBtn");
+      el.compareOutput = document.getElementById("compareOutput");
+      el.filterDrawing = document.getElementById("filterDrawing");
+      el.filterFrame = document.getElementById("filterFrame");
+      el.filterRevision = document.getElementById("filterRevision");
+      el.filterDescription = document.getElementById("filterDescription");
+      el.filterDate = document.getElementById("filterDate");
+      el.filterDimensionName = document.getElementById("filterDimensionName");
+      el.filterDimensionValue = document.getElementById("filterDimensionValue");
+      el.databaseBody = document.getElementById("databaseBody");
+      el.exportExcelBtn = document.getElementById("exportExcelBtn");
+      el.exportCsvBtn = document.getElementById("exportCsvBtn");
+      el.exportJsonBtn = document.getElementById("exportJsonBtn");
+      el.printBtn = document.getElementById("printBtn");
+      el.settingsExportExcelBtn = document.getElementById("settingsExportExcelBtn");
+      el.settingsExportCsvBtn = document.getElementById("settingsExportCsvBtn");
+      el.settingsExportJsonBtn = document.getElementById("settingsExportJsonBtn");
+      el.settingsPrintBtn = document.getElementById("settingsPrintBtn");
+      el.importBtn = document.getElementById("importBtn");
+      el.importInput = document.getElementById("importInput");
+      el.clearBtn = document.getElementById("clearBtn");
+      el.themeButtons = document.querySelectorAll(".theme-btn");
+      el.statTotal = document.getElementById("statTotal");
+      el.statFrames = document.getElementById("statFrames");
+      el.statDimensions = document.getElementById("statDimensions");
+      el.statRecent = document.getElementById("statRecent");
+      el.statRevision = document.getElementById("statRevision");
+      el.recentList = document.getElementById("recentList");
+      el.frameChart = document.getElementById("frameChart");
+      el.detailModal = document.getElementById("detailModal");
+      el.modalOverlay = document.getElementById("modalOverlay");
+      el.closeModalBtn = document.getElementById("closeModalBtn");
+      el.detailHeading = document.getElementById("detailHeading");
+      el.detailMeta = document.getElementById("detailMeta");
+      el.dimensionSearch = document.getElementById("dimensionSearch");
+      el.detailDimensionBody = document.getElementById("detailDimensionBody");
+      el.generalDimensions = document.getElementById("generalDimensions");
+      el.detailNotes = document.getElementById("detailNotes");
+      el.detailTitleBlock = document.getElementById("detailTitleBlock");
+      el.prevPageBtn = document.getElementById("prevPageBtn");
+      el.nextPageBtn = document.getElementById("nextPageBtn");
+      el.zoomInBtn = document.getElementById("zoomInBtn");
+      el.zoomOutBtn = document.getElementById("zoomOutBtn");
+      el.fitWidthBtn = document.getElementById("fitWidthBtn");
+      el.fitPageBtn = document.getElementById("fitPageBtn");
+      el.rotateBtn = document.getElementById("rotateBtn");
+      el.downloadBtn = document.getElementById("downloadBtn");
+      el.fullscreenBtn = document.getElementById("fullscreenBtn");
+      el.pageInfo = document.getElementById("pageInfo");
+      el.thumbnailSidebar = document.getElementById("thumbnailSidebar");
+      el.viewerStage = document.getElementById("viewerStage");
+      el.pdfCanvas = document.getElementById("pdfCanvas");
+      el.toastArea = document.getElementById("toastArea");
+      el.loadingOverlay = document.getElementById("loadingOverlay");
+    }
+
+    function bindEvents() {
+      el.navButtons.forEach(btn => {
+        btn.addEventListener("click", () => switchSection(btn.dataset.section));
+      });
+
+      document.querySelectorAll("[data-nav-target]").forEach(btn => {
+        btn.addEventListener("click", () => switchSection(btn.dataset.navTarget));
+      });
+
+      el.headerUploadBtn.addEventListener("click", () => switchSection("upload"));
+      el.browseBtn.addEventListener("click", () => el.pdfInput.click());
+      el.pdfInput.addEventListener("change", e => handleFiles(e.target.files));
+
+      ["dragenter", "dragover"].forEach(type => {
+        el.dropzone.addEventListener(type, ev => {
+          ev.preventDefault();
+          el.dropzone.classList.add("dragover");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(type => {
+        el.dropzone.addEventListener(type, ev => {
+          ev.preventDefault();
+          el.dropzone.classList.remove("dragover");
+        });
+      });
+
+      el.dropzone.addEventListener("drop", ev => {
+        const files = ev.dataTransfer.files;
+        handleFiles(files);
+      });
+
+      el.searchInput.addEventListener("input", debounce(handleSearchInput, 120));
+      document.addEventListener("click", handleOutsideClicks);
+      el.searchResults.addEventListener("click", handleSearchActions);
+      el.databaseBody.addEventListener("click", handleDatabaseActions);
+
+      el.compareBtn.addEventListener("click", renderCompare);
+      el.compareA.addEventListener("change", () => state.compareA = el.compareA.value);
+      el.compareB.addEventListener("change", () => state.compareB = el.compareB.value);
+
+      [
+        el.filterDrawing,
+        el.filterFrame,
+        el.filterRevision,
+        el.filterDescription,
+        el.filterDate,
+        el.filterDimensionName,
+        el.filterDimensionValue
+      ].forEach(input => input.addEventListener("input", renderDatabase));
+
+      el.exportExcelBtn.addEventListener("click", exportExcel);
+      el.exportCsvBtn.addEventListener("click", exportCSV);
+      el.exportJsonBtn.addEventListener("click", exportJSON);
+      el.printBtn.addEventListener("click", printDatabase);
+      el.settingsExportExcelBtn.addEventListener("click", exportExcel);
+      el.settingsExportCsvBtn.addEventListener("click", exportCSV);
+      el.settingsExportJsonBtn.addEventListener("click", exportJSON);
+      el.settingsPrintBtn.addEventListener("click", printDatabase);
+
+      el.importBtn.addEventListener("click", () => el.importInput.click());
+      el.importInput.addEventListener("change", importDatabase);
+      el.clearBtn.addEventListener("click", clearDatabase);
+
+      el.themeButtons.forEach(btn => {
+        btn.addEventListener("click", () => applyTheme(btn.dataset.themeChoice, true));
+      });
+
+      el.modalOverlay.addEventListener("click", closeDetail);
+      el.closeModalBtn.addEventListener("click", closeDetail);
+      el.dimensionSearch.addEventListener("input", renderDetailDimensions);
+
+      el.prevPageBtn.addEventListener("click", () => changePage(-1));
+      el.nextPageBtn.addEventListener("click", () => changePage(1));
+      el.zoomInBtn.addEventListener("click", () => zoomViewer(1.15));
+      el.zoomOutBtn.addEventListener("click", () => zoomViewer(1 / 1.15));
+      el.fitWidthBtn.addEventListener("click", () => {
+        state.viewer.fitMode = "width";
+        renderCurrentPage();
+      });
+      el.fitPageBtn.addEventListener("click", () => {
+        state.viewer.fitMode = "page";
+        renderCurrentPage();
+      });
+      el.rotateBtn.addEventListener("click", () => {
+        state.viewer.rotation = (state.viewer.rotation + 90) % 360;
+        renderCurrentPage();
+      });
+      el.downloadBtn.addEventListener("click", downloadCurrentPDF);
+      el.fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+      window.addEventListener("resize", debounce(() => {
+        if (state.viewer.pdfDoc && !el.detailModal.classList.contains("hidden")) {
+          renderCurrentPage();
+        }
+      }, 150));
+    }
+
+    function switchSection(id) {
+      el.sections.forEach(section => section.classList.remove("active"));
+      el.navButtons.forEach(btn => btn.classList.remove("active"));
+
+      const section = document.getElementById(id);
+      const nav = [...el.navButtons].find(btn => btn.dataset.section === id);
+
+      if (section) section.classList.add("active");
+      if (nav) nav.classList.add("active");
+
+      if (id === "compare") populateCompareSelects();
+      if (id === "database") renderDatabase();
+    }
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(APP_DB.NAME, APP_DB.VERSION);
+
+        request.onupgradeneeded = event => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains(APP_DB.STORE)) {
+            const store = db.createObjectStore(APP_DB.STORE, { keyPath: "id" });
+            store.createIndex("drawingNumber", "drawingNumber", { unique: false });
+            store.createIndex("frame", "frame", { unique: false });
+            store.createIndex("revision", "revision", { unique: false });
+            store.createIndex("uploadDateISO", "uploadDateISO", { unique: false });
+          }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function tx(storeName, mode = "readonly") {
+      return state.db.transaction(storeName, mode).objectStore(storeName);
+    }
+
+    function getAllDrawings() {
+      return new Promise((resolve, reject) => {
+        const request = tx(APP_DB.STORE).getAll();
+        request.onsuccess = () => {
+          const records = (request.result || []).sort((a, b) =>
+            new Date(b.uploadDateISO) - new Date(a.uploadDateISO)
+          );
+          resolve(records);
+        };
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function saveDrawingRecord(record) {
+      return new Promise((resolve, reject) => {
+        const request = tx(APP_DB.STORE, "readwrite").put(record);
+        request.onsuccess = () => resolve(true);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function deleteDrawingRecord(id) {
+      return new Promise((resolve, reject) => {
+        const request = tx(APP_DB.STORE, "readwrite").delete(id);
+        request.onsuccess = () => resolve(true);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function clearAllRecords() {
+      return new Promise((resolve, reject) => {
+        const request = tx(APP_DB.STORE, "readwrite").clear();
+        request.onsuccess = () => resolve(true);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function renderAll() {
+      renderDashboard();
+      renderSearchResults("");
+      populateCompareSelects();
+      populateFilterOptions();
+      renderDatabase();
+    }
+
+    function renderDashboard() {
+      const drawings = state.drawings;
+      const total = drawings.length;
+      const frames = unique(drawings.map(d => d.frame).filter(Boolean));
+      const dimensionCount = drawings.reduce((sum, d) => sum + (d.dimensions?.length || 0), 0);
+      const recentLimit = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      const recent = drawings.filter(d => new Date(d.uploadDateISO).getTime() >= recentLimit).length;
+      const latest = drawings[0];
+
+      el.statTotal.textContent = total;
+      el.statFrames.textContent = frames.length;
+      el.statDimensions.textContent = dimensionCount;
+      el.statRecent.textContent = recent;
+      el.statRevision.textContent = latest?.revision || "-";
+
+      if (!drawings.length) {
+        el.recentList.innerHTML = "No drawings uploaded yet.";
+        el.frameChart.innerHTML = "No frame data available.";
+        return;
+      }
+
+      el.recentList.innerHTML = drawings.slice(0, 6).map(d => `
+        <div class="stack-item">
+          <div>
+            <strong>${escapeHtml(d.drawingNumber || "-")}</strong>
+            <small>${escapeHtml(d.description || "No description")} • Rev ${escapeHtml(d.revision || "-")}</small>
+          </div>
+          <div class="text-right">
+            <div class="badge neutral">${escapeHtml(d.frame || "N/A")}</div>
+            <small>${formatDateTime(d.uploadDateISO)}</small>
+          </div>
+        </div>
+      `).join("");
+
+      const frameMap = {};
+      drawings.forEach(d => {
+        const key = d.frame || "Unknown";
+        frameMap[key] = (frameMap[key] || 0) + 1;
+      });
+
+      const max = Math.max(...Object.values(frameMap));
+      el.frameChart.innerHTML = Object.entries(frameMap)
+        .sort((a, b) => b[1] - a[1])
+        .map(([frame, count]) => `
+          <div class="chart-row">
+            <div class="chart-meta">
+              <strong>${escapeHtml(frame)}</strong>
+              <span>${count}</span>
+            </div>
+            <div class="bar">
+              <span style="width:${(count / max) * 100}%"></span>
+            </div>
+          </div>
+        `).join("");
+    }
+
+    async function handleFiles(fileList) {
+      if (!fileList || !fileList.length) return;
+
+      const files = [...fileList];
+      const valid = files.filter(isPDF);
+      const invalid = files.length - valid.length;
+
+      if (invalid > 0) toast("Invalid File. Only PDF files are accepted.", "error");
+      if (!valid.length) return;
+
+      clearUploadEmptyState();
+      showLoading(true);
+
+      for (const file of valid) {
+        const rowId = addUploadRow(file);
+
+        try {
+          updateUploadRow(rowId, { status: "Reading PDF...", progress: 8 });
+
+          const record = await processPDF(file, rowId);
+
+          updateUploadRow(rowId, { status: "Checking database...", progress: 78 });
+
+          const duplicate = state.drawings.find(d =>
+            normalize(d.drawingNumber) === normalize(record.drawingNumber)
+          );
+
+          if (duplicate) {
+            const overwrite = confirm(`Overwrite Existing Drawing?\n\nDrawing Number: ${record.drawingNumber}`);
+            if (!overwrite) {
+              updateUploadRow(rowId, {
+                drawingNumber: record.drawingNumber,
+                frame: record.frame,
+                revision: record.revision,
+                progress: 100,
+                status: "Duplicate Skipped",
+                statusType: "error"
+              });
+              toast(`Duplicate Drawing skipped: ${record.drawingNumber}`, "error");
+              continue;
+            }
+            record.id = duplicate.id;
+          }
+
+          await saveDrawingRecord(record);
+          state.drawings = await getAllDrawings();
+
+          updateUploadRow(rowId, {
+            drawingNumber: record.drawingNumber,
+            frame: record.frame,
+            revision: record.revision,
+            progress: 100,
+            status: "Processed Successfully",
+            statusType: "success"
+          });
+
+          toast(`Processed Successfully: ${record.drawingNumber}`, "success");
+        } catch (error) {
+          console.error(error);
+          updateUploadRow(rowId, {
+            progress: 100,
+            status: "PDF Cannot Be Read",
+            statusType: "error"
+          });
+          toast(`PDF Cannot Be Read: ${file.name}`, "error");
+        }
+      }
+
+      showLoading(false);
+      el.pdfInput.value = "";
+      renderAll();
+    }
+
+    function isPDF(file) {
+      return file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    }
+
+    function clearUploadEmptyState() {
+      const empty = el.uploadBody.querySelector(".empty-row");
+      if (empty) el.uploadBody.innerHTML = "";
+    }
+
+    function addUploadRow(file) {
+      const id = "upload-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+      const tr = document.createElement("tr");
+      tr.dataset.rowId = id;
+      tr.innerHTML = `
+        <td>${escapeHtml(file.name)}</td>
+        <td data-col="drawingNumber">Parsing...</td>
+        <td data-col="status"><span class="status-pill">Queued</span></td>
+        <td data-col="revision">-</td>
+        <td data-col="frame">-</td>
+        <td>${formatDateTime(new Date().toISOString())}</td>
+        <td data-col="progress">
+          <div class="progress"><span style="width:0%"></span></div>
+        </td>
+      `;
+      el.uploadBody.prepend(tr);
+      return id;
+    }
+
+    function updateUploadRow(id, updates) {
+      const row = el.uploadBody.querySelector(`[data-row-id="${id}"]`);
+      if (!row) return;
+
+      if (updates.drawingNumber !== undefined) row.querySelector('[data-col="drawingNumber"]').textContent = updates.drawingNumber || "-";
+      if (updates.revision !== undefined) row.querySelector('[data-col="revision"]').textContent = updates.revision || "-";
+      if (updates.frame !== undefined) row.querySelector('[data-col="frame"]').textContent = updates.frame || "-";
+
+      if (updates.status !== undefined) {
+        row.querySelector('[data-col="status"]').innerHTML = `
+          <span class="status-pill ${updates.statusType || ""}">
+            ${updates.statusType === "success" ? "✔" : updates.statusType === "error" ? "⚠" : "•"}
+            ${escapeHtml(updates.status)}
+          </span>
+        `;
+      }
+
+      if (updates.progress !== undefined) {
+        const bar = row.querySelector(".progress span");
+        if (bar) bar.style.width = `${Math.max(0, Math.min(100, updates.progress))}%`;
+      }
+    }
+
+    async function processPDF(file, rowId) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      updateUploadRow(rowId, { status: "Extracting selectable text...", progress: 28 });
+
+      const extracted = await extractPDFText(pdfDoc);
+
+      updateUploadRow(rowId, { status: "Parsing title block and dimensions...", progress: 56 });
+
+      const parsed = parseDrawingData(extracted.fullText, extracted.lines);
+      const pdfBlob = new Blob([arrayBuffer], { type: "application/pdf" });
+
+      return {
+        id: cryptoId(),
+        fileName: file.name,
+        pdfBlob,
+        uploadDateISO: new Date().toISOString(),
+        pageCount: pdfDoc.numPages,
+        status: "Processed Successfully",
+        allText: extracted.fullText,
+        ...parsed
+      };
+    }
+
+    async function extractPDFText(pdfDoc) {
+      const lines = [];
+      const chunks = [];
+
+      for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+        const page = await pdfDoc.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        const pageLines = groupTextItemsIntoLines(textContent.items);
+
+        pageLines.forEach(line => {
+          const clean = line.replace(/\s+/g, " ").trim();
+          if (clean) lines.push(clean);
+        });
+
+        chunks.push(pageLines.join("\n"));
+      }
+
+      return {
+        fullText: chunks.join("\n"),
+        lines: unique(lines)
+      };
+    }
+
+    function groupTextItemsIntoLines(items) {
+      if (!items || !items.length) return [];
+      const rows = {};
+
+      items.forEach(item => {
+        const y = Math.round(item.transform[5]);
+        rows[y] = rows[y] || [];
+        rows[y].push(item);
+      });
+
+      return Object.keys(rows)
+        .map(Number)
+        .sort((a, b) => b - a)
+        .map(y => rows[y]
+          .sort((a, b) => a.transform[4] - b.transform[4])
+          .map(item => item.str)
+          .join(" ")
+          .replace(/\s+/g, " ")
+          .trim()
+        )
+        .filter(Boolean);
+    }
+
+    function parseDrawingData(fullText, lines) {
+      const normalizedLines = lines.map(l => l.replace(/\s+/g, " ").trim()).filter(Boolean);
+      const text = fullText.replace(/\s+/g, " ");
+
+      const drawingNumber = extractDrawingNumber(text, normalizedLines) || `UNIDENTIFIED-${Date.now().toString().slice(-6)}`;
+      const frame = extractFrame(text, normalizedLines) || "Unknown";
+      const revision = extractRevision(text, normalizedLines) || "-";
+      const date = extractDate(text, normalizedLines) || "-";
+      const approvedBy = extractShortCodeNearKeywords(text, ["APPROVED BY", "APPROVED", "APP"]) || "-";
+      const designer = extractShortCodeNearKeywords(text, ["DESIGNER", "DRAWN BY", "DRAWN", "DRN"]) || "-";
+      const description = extractDescription(normalizedLines, drawingNumber, frame) || "Outline drawing description not detected";
+      const dimensions = extractDimensionTable(fullText, normalizedLines);
+      const generalDimensions = extractGeneralDimensions(fullText, dimensions);
+      const notes = extractNotes(normalizedLines) || "No notes detected in the PDF text.";
+      const titleBlock = extractTitleBlock(normalizedLines, drawingNumber) || "No title block text detected.";
+
+      return {
+        drawingNumber,
+        frame,
+        revision,
+        date,
+        approvedBy,
+        designer,
+        description,
+        outlineDescription: description,
+        dimensions,
+        generalDimensions,
+        notes,
+        titleBlock
+      };
+    }
+
+    function extractDrawingNumber(text, lines) {
+      const keywordPatterns = [
+        /\b(?:DWG|DRAWING)\s*(?:NO|NUMBER)?[:\s-]*([A-Z]{1,5}[-]?\d{4,})\b/i,
+        /\b([A-Z]{1,5}\d{4,})\b/g,
+        /\b([A-Z]{2,5}-\d{4,})\b/g
+      ];
+
+      for (const pattern of keywordPatterns) {
+        const match = text.match(pattern);
+        if (match) {
+          if (match[1]) return match[1].toUpperCase();
+          const value = Array.isArray(match) ? match[0] : "";
+          if (value) return value.toUpperCase();
+        }
+      }
+
+      for (const line of lines) {
+        if (/dwg|drawing/i.test(line)) {
+          const m = line.match(/\b([A-Z]{1,5}[-]?\d{4,})\b/i);
+          if (m) return m[1].toUpperCase();
+        }
+      }
+
+      return "";
+    }
+
+    function extractFrame(text, lines) {
+      const patterns = [
+        /\bFRAME[:\s-]*([0-9]{3}(?:\/[0-9]{3})?[A-Z]{0,4})\b/i,
+        /\b([0-9]{3}\/[0-9]{3}[A-Z]{0,4})\b/g,
+        /\b([0-9]{3}[A-Z]{0,4})\b/g
+      ];
+
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match) {
+          if (match[1]) return match[1].toUpperCase();
+          if (match[0]) return match[0].toUpperCase();
+        }
+      }
+
+      for (const line of lines) {
+        if (/frame/i.test(line)) {
+          const m = line.match(/frame[:\s-]*([A-Z0-9\/-]+)/i);
+          if (m) return m[1].toUpperCase();
+        }
+      }
+
+      return "";
+    }
+
+    function extractRevision(text, lines) {
+      const match = text.match(/\bREV(?:ISION)?[:\s-]*([A-Z0-9]{1,3})\b/i);
+      if (match) return match[1].toUpperCase();
+
+      for (const line of lines) {
+        if (/^rev/i.test(line) || /\brev\b/i.test(line)) {
+          const m = line.match(/\b([A-Z0-9]{1,3})\b/);
+          if (m) return m[1].toUpperCase();
+        }
+      }
+
+      return "";
+    }
+
+    function extractDate(text, lines) {
+      const patterns = [
+        /\b\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}\b/,
+        /\b\d{4}[\/-]\d{1,2}[\/-]\d{1,2}\b/
+      ];
+
+      for (const p of patterns) {
+        const m = text.match(p);
+        if (m) return m[0];
+      }
+
+      for (const line of lines) {
+        if (/date/i.test(line)) {
+          for (const p of patterns) {
+            const m = line.match(p);
+            if (m) return m[0];
+          }
+        }
+      }
+
+      return "";
+    }
+
+    function extractShortCodeNearKeywords(text, keywords) {
+      for (const key of keywords) {
+        const regex = new RegExp(escapeRegex(key) + "[:\\s-]*([A-Z]{1,5})", "i");
+        const m = text.match(regex);
+        if (m) return m[1].toUpperCase();
+      }
+      return "";
+    }
+
+    function extractDescription(lines, drawingNumber, frame) {
+      const scored = lines.map(line => {
+        let score = 0;
+        if (line.length > 10) score += 1;
+        if (line.length > 22) score += 1;
+        if (/[A-Z]/.test(line)) score += 1;
+        if (/TEFC|ODP|TENV|EXTERNAL|BAFFLE|MOTOR|OUTLINE|FR|FRAME|DIM/i.test(line)) score += 4;
+        if (frame && line.includes(frame)) score += 3;
+        if (drawingNumber && line.includes(drawingNumber)) score -= 2;
+        if (/approved|designer|drawn|date|sheet|scale|rev|note|title block/i.test(line)) score -= 2;
+        return { line, score };
+      }).sort((a, b) => b.score - a.score);
+
+      return scored[0]?.line || "";
+    }
+
+    function extractDimensionTable(fullText, lines) {
+      const map = new Map();
+      const stopWords = new Set([
+        "REV", "DATE", "DWG", "SHT", "SHEET", "NOTE", "NOTES", "TITLE",
+        "FRAME", "DIM", "DIMS", "APP", "APPROVED", "DRAWN", "BY", "NO",
+        "DESCRIPTION", "MOTOR", "OUTLINE", "GENERAL", "TOL", "ALL", "THE",
+        "AND", "FOR", "SCALE", "SIZE", "CLASS"
+      ]);
+
+      const lineRegexes = [
+        /^\s*([A-Z0-9]{1,4})\s+(\d{1,3}(?:\.\d{1,3})?)\s*$/,
+        /^\s*([A-Z0-9]{1,4})\s*[:=-]\s*(\d{1,3}(?:\.\d{1,3})?)\s*$/
+      ];
+
+      lines.forEach(line => {
+        for (const rgx of lineRegexes) {
+          const m = line.match(rgx);
+          if (m) {
+            const name = m[1].toUpperCase();
+            const value = m[2];
+            if (!/[A-Z]/.test(name)) continue;
+            if (stopWords.has(name)) continue;
+            if (!map.has(name)) map.set(name, value);
+          }
+        }
+      });
+
+      const globalRegex = /\b([A-Z0-9]{1,4})\s+(\d{1,3}(?:\.\d{1,3})?)\b/g;
+      let m;
+      while ((m = globalRegex.exec(fullText)) !== null) {
+        const name = m[1].toUpperCase();
+        const value = m[2];
+        if (!/[A-Z]/.test(name)) continue;
+        if (stopWords.has(name)) continue;
+        if (name.length > 4) continue;
+        if (!map.has(name)) map.set(name, value);
+      }
+
+      const priority = [
+        "A","AA","AB","AD","AK",
+        "B","BA","BB","BC","BD","BE","BF","BG","BS",
+        "C","D","E","F","G","H","J","K","L","M","N","P","R","S","T","U","V","W","X","Y","Z",
+        "2E","2F","2FF","3F","4F"
+      ];
+
+      const result = [...map.entries()].map(([name, value]) => ({ name, value }));
+      result.sort((a, b) => {
+        const ai = priority.indexOf(a.name);
+        const bi = priority.indexOf(b.name);
+        if (ai !== -1 && bi !== -1) return ai - bi;
+        if (ai !== -1) return -1;
+        if (bi !== -1) return 1;
+        return a.name.localeCompare(b.name, undefined, { numeric: true });
+      });
+
+      return result;
+    }
+
+    function extractGeneralDimensions(fullText, dimensions) {
+      const dimensionValues = new Set((dimensions || []).map(d => d.value));
+      const raw = fullText.match(/\b\d{1,3}(?:\.\d{1,3})\b/g) || [];
+      return unique(raw.filter(v => !dimensionValues.has(v))).slice(0, 180);
+    }
+
+    function extractNotes(lines) {
+      const explicitNotes = lines.filter(line =>
+        /^notes?\b/i.test(line) ||
+        /\bNOTE\b/i.test(line) ||
+        /UNLESS OTHERWISE SPECIFIED/i.test(line) ||
+        /TOLERANCE/i.test(line) ||
+        /BREAK SHARP EDGES/i.test(line)
+      );
+
+      if (explicitNotes.length) return explicitNotes.slice(0, 14).join("\n");
+      return "";
+    }
+
+    function extractTitleBlock(lines, drawingNumber) {
+      const blockLines = lines.filter(line =>
+        /title|drawing|dwg|drawn|designer|approved|date|sheet|scale|rev|frame/i.test(line) ||
+        (drawingNumber && line.includes(drawingNumber))
+      );
+
+      return blockLines.slice(0, 18).join("\n");
+    }
+
+    function handleSearchInput() {
+      const q = el.searchInput.value.trim();
+      renderSuggestions(q);
+      renderSearchResults(q);
+    }
+
+    function renderSuggestions(query) {
+      if (!query) {
+        el.suggestions.classList.add("hidden");
+        el.suggestions.innerHTML = "";
+        return;
+      }
+
+      const results = state.drawings.filter(d => matchesQuery(d, query)).slice(0, 8);
+
+      if (!results.length) {
+        el.suggestions.classList.add("hidden");
+        el.suggestions.innerHTML = "";
+        return;
+      }
+
+      el.suggestions.innerHTML = results.map(d => `
+        <li data-suggestion-id="${d.id}">
+          <strong>${escapeHtml(d.drawingNumber || "-")}</strong> — ${escapeHtml(d.description || "No description")}
+        </li>
+      `).join("");
+
+      el.suggestions.classList.remove("hidden");
+    }
+
+    function renderSearchResults(query = "") {
+      const q = query.trim();
+
+      if (!q) {
+        el.searchResults.innerHTML = `<div class="empty-box">No drawing found. Start typing to search the database.</div>`;
+        return;
+      }
+
+      const results = state.drawings.filter(d => matchesQuery(d, q));
+
+      if (!results.length) {
+        el.searchResults.innerHTML = `<div class="empty-box">No Drawing Found for "<strong>${escapeHtml(q)}</strong>".</div>`;
+        return;
+      }
+
+      el.searchResults.innerHTML = results.map(d => `
+        <div class="panel result-card">
+          <div class="result-head">
+            <div>
+              <h3>${escapeHtml(d.drawingNumber || "-")}</h3>
+              <p>${escapeHtml(d.description || "No description")}</p>
+            </div>
+            <div class="action-group">
+              <button class="btn btn-secondary btn-sm" data-search-action="open" data-id="${d.id}">Open</button>
+              <button class="btn btn-primary btn-sm" data-search-action="compare" data-id="${d.id}">Compare</button>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-box"><span>Drawing Number</span><strong>${escapeHtml(d.drawingNumber || "-")}</strong></div>
+            <div class="meta-box"><span>Description</span><strong>${escapeHtml(d.description || "-")}</strong></div>
+            <div class="meta-box"><span>Frame</span><strong>${escapeHtml(d.frame || "-")}</strong></div>
+            <div class="meta-box"><span>Revision</span><strong>${escapeHtml(d.revision || "-")}</strong></div>
+            <div class="meta-box"><span>Date</span><strong>${escapeHtml(d.date || "-")}</strong></div>
+            <div class="meta-box"><span>Approved By</span><strong>${escapeHtml(d.approvedBy || "-")}</strong></div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-box"><span>Designer</span><strong>${escapeHtml(d.designer || "-")}</strong></div>
+            <div class="meta-box"><span>Dimensions</span><strong>${d.dimensions?.length || 0}</strong></div>
+            <div class="meta-box"><span>General Dimensions</span><strong>${d.generalDimensions?.length || 0}</strong></div>
+            <div class="meta-box"><span>Status</span><strong>${escapeHtml(d.status || "-")}</strong></div>
+            <div class="meta-box"><span>Upload Date</span><strong>${formatDateTime(d.uploadDateISO)}</strong></div>
+            <div class="meta-box"><span>File Name</span><strong>${escapeHtml(d.fileName || "-")}</strong></div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function matchesQuery(drawing, query) {
+      const q = normalize(query);
+      return [
+        drawing.drawingNumber,
+        drawing.frame,
+        drawing.description,
+        drawing.revision
+      ].some(v => normalize(v).includes(q));
+    }
+
+    function handleOutsideClicks(event) {
+      const suggestionItem = event.target.closest("[data-suggestion-id]");
+      if (suggestionItem) {
+        const id = suggestionItem.dataset.suggestionId;
+        const drawing = state.drawings.find(d => d.id === id);
+        if (drawing) {
+          el.searchInput.value = drawing.drawingNumber;
+          renderSearchResults(drawing.drawingNumber);
+          el.suggestions.classList.add("hidden");
+        }
+        return;
+      }
+
+      if (!event.target.closest(".search-wrap")) {
+        el.suggestions.classList.add("hidden");
+      }
+    }
+
+    function handleSearchActions(event) {
+      const btn = event.target.closest("[data-search-action]");
+      if (!btn) return;
+      const id = btn.dataset.id;
+
+      if (btn.dataset.searchAction === "open") {
+        openDetail(id);
+      } else if (btn.dataset.searchAction === "compare") {
+        openCompareWith(id);
+      }
+    }
+
+    async function openDetail(id) {
+      const drawing = state.drawings.find(d => d.id === id);
+      if (!drawing) {
+        toast("No Drawing Found.", "error");
+        return;
+      }
+
+      state.currentDetailId = id;
+      el.detailHeading.textContent = drawing.drawingNumber || "Drawing Details";
+
+      el.detailMeta.innerHTML = `
+        <div class="meta-box"><span>Drawing Number</span><strong>${escapeHtml(drawing.drawingNumber || "-")}</strong></div>
+        <div class="meta-box"><span>Frame</span><strong>${escapeHtml(drawing.frame || "-")}</strong></div>
+        <div class="meta-box"><span>Revision</span><strong>${escapeHtml(drawing.revision || "-")}</strong></div>
+        <div class="meta-box"><span>Date</span><strong>${escapeHtml(drawing.date || "-")}</strong></div>
+        <div class="meta-box"><span>Approved By</span><strong>${escapeHtml(drawing.approvedBy || "-")}</strong></div>
+        <div class="meta-box"><span>Designer</span><strong>${escapeHtml(drawing.designer || "-")}</strong></div>
+      `;
+
+      el.dimensionSearch.value = "";
+      renderDetailDimensions();
+      renderGeneralDimensionBadges(drawing.generalDimensions || []);
+      el.detailNotes.textContent = drawing.notes || "No notes detected.";
+      el.detailTitleBlock.textContent = drawing.titleBlock || "No title block detected.";
+
+      el.detailModal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+
+      try {
+        await loadViewerDocument(drawing);
+      } catch (error) {
+        console.error(error);
+        toast("PDF Cannot Be Read in viewer.", "error");
+      }
+    }
+
+    function closeDetail() {
+      el.detailModal.classList.add("hidden");
+      document.body.style.overflow = "";
+      state.viewer.pdfDoc = null;
+      state.viewer.drawing = null;
+      state.currentDetailId = null;
+      el.thumbnailSidebar.innerHTML = "";
+    }
+
+    function getCurrentDrawing() {
+      return state.drawings.find(d => d.id === state.currentDetailId);
+    }
+
+    function renderDetailDimensions() {
+      const drawing = getCurrentDrawing();
+      if (!drawing) return;
+
+      const q = normalize(el.dimensionSearch.value);
+      const dims = (drawing.dimensions || []).filter(dim => {
+        if (!q) return true;
+        return normalize(dim.name).includes(q) || normalize(dim.value).includes(q);
+      });
+
+      if (!dims.length) {
+        el.detailDimensionBody.innerHTML = `<tr><td colspan="2" class="empty-row">No dimensions match the current filter.</td></tr>`;
+        return;
+      }
+
+      el.detailDimensionBody.innerHTML = dims.map(dim => `
+        <tr>
+          <td><strong>${escapeHtml(dim.name)}</strong></td>
+          <td>${escapeHtml(dim.value)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderGeneralDimensionBadges(values) {
+      if (!values.length) {
+        el.generalDimensions.innerHTML = `<span class="empty-box" style="padding:0;">No general dimensions detected.</span>`;
+        return;
+      }
+
+      el.generalDimensions.innerHTML = values.map(v => `<span class="badge">${escapeHtml(v)}</span>`).join("");
+    }
+
+    async function loadViewerDocument(drawing) {
+      const data = await blobToUint8Array(drawing.pdfBlob);
+      const pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+
+      state.viewer.pdfDoc = pdfDoc;
+      state.viewer.drawing = drawing;
+      state.viewer.pageNum = 1;
+      state.viewer.pageCount = pdfDoc.numPages;
+      state.viewer.rotation = 0;
+      state.viewer.scale = 1.2;
+      state.viewer.fitMode = "width";
+
+      await renderCurrentPage();
+      await renderThumbnails();
+    }
+
+    async function renderCurrentPage() {
+      const { pdfDoc, pageNum, rotation, fitMode, scale } = state.viewer;
+      if (!pdfDoc) return;
+
+      const page = await pdfDoc.getPage(pageNum);
+      const baseViewport = page.getViewport({ scale: 1, rotation });
+
+      const widthAvailable = Math.max(el.viewerStage.clientWidth - 28, 200);
+      const heightAvailable = Math.max(el.viewerStage.clientHeight - 28, 200);
+
+      let finalScale = scale;
+      if (fitMode === "width") {
+        finalScale = widthAvailable / baseViewport.width;
+      } else if (fitMode === "page") {
+        finalScale = Math.min(widthAvailable / baseViewport.width, heightAvailable / baseViewport.height);
+      }
+
+      const viewport = page.getViewport({ scale: finalScale, rotation });
+      const canvas = el.pdfCanvas;
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.width = `${viewport.width}px`;
+      canvas.style.height = `${viewport.height}px`;
+
+      await page.render({
+        canvasContext: ctx,
+        viewport
+      }).promise;
+
+      el.pageInfo.textContent = `Page ${pageNum} / ${state.viewer.pageCount}`;
+      highlightActiveThumbnail();
+    }
+
+    async function renderThumbnails() {
+      const { pdfDoc } = state.viewer;
+      if (!pdfDoc) return;
+
+      el.thumbnailSidebar.innerHTML = "";
+
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const wrap = document.createElement("div");
+        wrap.className = "thumb-item";
+        wrap.dataset.page = i;
+        wrap.innerHTML = `
+          <canvas></canvas>
+          <div class="thumb-label">Page ${i}</div>
+        `;
+        wrap.addEventListener("click", () => {
+          state.viewer.pageNum = i;
+          renderCurrentPage();
+        });
+
+        el.thumbnailSidebar.appendChild(wrap);
+
+        const page = await pdfDoc.getPage(i);
+        const viewport = page.getViewport({ scale: 0.22 });
+        const canvas = wrap.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport
+        }).promise;
+      }
+
+      highlightActiveThumbnail();
+    }
+
+    function highlightActiveThumbnail() {
+      const pageNum = state.viewer.pageNum;
+      el.thumbnailSidebar.querySelectorAll(".thumb-item").forEach(item => {
+        item.classList.toggle("active", Number(item.dataset.page) === pageNum);
+      });
+    }
+
+    function changePage(delta) {
+      if (!state.viewer.pdfDoc) return;
+      const next = state.viewer.pageNum + delta;
+      if (next < 1 || next > state.viewer.pageCount) return;
+      state.viewer.pageNum = next;
+      renderCurrentPage();
+    }
+
+    function zoomViewer(factor) {
+      if (!state.viewer.pdfDoc) return;
+      state.viewer.fitMode = "custom";
+      state.viewer.scale = Math.max(0.35, Math.min(4.5, state.viewer.scale * factor));
+      renderCurrentPage();
+    }
+
+    function downloadCurrentPDF() {
+      const drawing = state.viewer.drawing;
+      if (!drawing?.pdfBlob) return;
+      downloadBlob(drawing.pdfBlob, drawing.fileName || `${drawing.drawingNumber || "drawing"}.pdf`);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        el.viewerStage.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    function populateCompareSelects() {
+      const options = [`<option value="">Select Drawing</option>`]
+        .concat(state.drawings.map(d => `
+          <option value="${d.id}">
+            ${escapeHtml(d.drawingNumber || "-")} — Rev ${escapeHtml(d.revision || "-")}
+          </option>
+        `))
+        .join("");
+
+      el.compareA.innerHTML = options;
+      el.compareB.innerHTML = options;
+
+      if (state.compareA) el.compareA.value = state.compareA;
+      if (state.compareB) el.compareB.value = state.compareB;
+    }
+
+    function openCompareWith(id) {
+      switchSection("compare");
+      state.compareA = id;
+      el.compareA.value = id;
+
+      const second = state.drawings.find(d => d.id !== id);
+      if (second) {
+        state.compareB = second.id;
+        el.compareB.value = second.id;
+      }
+
+      renderCompare();
+    }
+
+    async function renderCompare() {
+      const idA = el.compareA.value;
+      const idB = el.compareB.value;
+
+      state.compareA = idA;
+      state.compareB = idB;
+
+      if (!idA || !idB) {
+        el.compareOutput.innerHTML = `<div class="empty-box">Select two drawings to compare.</div>`;
+        return;
+      }
+
+      if (idA === idB) {
+        el.compareOutput.innerHTML = `<div class="empty-box">Please select two different drawings.</div>`;
+        return;
+      }
+
+      const a = state.drawings.find(d => d.id === idA);
+      const b = state.drawings.find(d => d.id === idB);
+
+      if (!a || !b) {
+        el.compareOutput.innerHTML = `<div class="empty-box">Selected drawings are not available.</div>`;
+        return;
+      }
+
+      const rows = buildDiffRows(a.dimensions || [], b.dimensions || []);
+      const sameCount = rows.filter(r => r.status === "same").length;
+      const changedCount = rows.filter(r => r.status === "changed").length;
+      const missingCount = rows.filter(r => r.status === "missing").length;
+
+      el.compareOutput.innerHTML = `
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Comparison Summary</h3>
+          </div>
+          <div class="badge-wrap">
+            <span class="badge success">Green - Same Values: ${sameCount}</span>
+            <span class="badge danger">Red - Changed Values: ${changedCount}</span>
+            <span class="badge neutral">Missing / One Side Only: ${missingCount}</span>
+          </div>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare-column">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>${escapeHtml(a.drawingNumber)}</h3>
+              </div>
+              <div class="meta-grid">
+                <div class="meta-box"><span>Description</span><strong>${escapeHtml(a.description || "-")}</strong></div>
+                <div class="meta-box"><span>Frame</span><strong>${escapeHtml(a.frame || "-")}</strong></div>
+                <div class="meta-box"><span>Revision</span><strong>${escapeHtml(a.revision || "-")}</strong></div>
+                <div class="meta-box"><span>Date</span><strong>${escapeHtml(a.date || "-")}</strong></div>
+                <div class="meta-box"><span>Approved By</span><strong>${escapeHtml(a.approvedBy || "-")}</strong></div>
+                <div class="meta-box"><span>Designer</span><strong>${escapeHtml(a.designer || "-")}</strong></div>
+              </div>
+              <div class="preview-box"><canvas id="compareCanvasA"></canvas></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h3>Dimension Table A</h3></div>
+              <div class="table-wrap">
+                <table class="table">
+                  <thead><tr><th>Dimension</th><th>Value</th></tr></thead>
+                  <tbody>
+                    ${(a.dimensions || []).map(dim => `<tr><td>${escapeHtml(dim.name)}</td><td>${escapeHtml(dim.value)}</td></tr>`).join("") || `<tr><td colspan="2" class="empty-row">No dimensions detected.</td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="compare-column">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>${escapeHtml(b.drawingNumber)}</h3>
+              </div>
+              <div class="meta-grid">
+                <div class="meta-box"><span>Description</span><strong>${escapeHtml(b.description || "-")}</strong></div>
+                <div class="meta-box"><span>Frame</span><strong>${escapeHtml(b.frame || "-")}</strong></div>
+                <div class="meta-box"><span>Revision</span><strong>${escapeHtml(b.revision || "-")}</strong></div>
+                <div class="meta-box"><span>Date</span><strong>${escapeHtml(b.date || "-")}</strong></div>
+                <div class="meta-box"><span>Approved By</span><strong>${escapeHtml(b.approvedBy || "-")}</strong></div>
+                <div class="meta-box"><span>Designer</span><strong>${escapeHtml(b.designer || "-")}</strong></div>
+              </div>
+              <div class="preview-box"><canvas id="compareCanvasB"></canvas></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><h3>Dimension Table B</h3></div>
+              <div class="table-wrap">
+                <table class="table">
+                  <thead><tr><th>Dimension</th><th>Value</th></tr></thead>
+                  <tbody>
+                    ${(b.dimensions || []).map(dim => `<tr><td>${escapeHtml(dim.name)}</td><td>${escapeHtml(dim.value)}</td></tr>`).join("") || `<tr><td colspan="2" class="empty-row">No dimensions detected.</td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel mt-12">
+          <div class="panel-head">
+            <h3>Highlighted Differences</h3>
+          </div>
+          <div class="table-wrap">
+            <table class="table diff-table">
+              <thead>
+                <tr>
+                  <th>Dimension</th>
+                  <th>${escapeHtml(a.drawingNumber)}</th>
+                  <th>${escapeHtml(b.drawingNumber)}</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(row => `
+                  <tr class="${row.status}">
+                    <td><strong>${escapeHtml(row.name)}</strong></td>
+                    <td>${escapeHtml(row.valueA || "-")}</td>
+                    <td>${escapeHtml(row.valueB || "-")}</td>
+                    <td>${
+                      row.status === "same"
+                        ? '<span class="badge success">Same</span>'
+                        : row.status === "changed"
+                        ? '<span class="badge danger">Changed</span>'
+                        : '<span class="badge neutral">Missing</span>'
+                    }</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      renderComparePreview(a.pdfBlob, document.getElementById("compareCanvasA"));
+      renderComparePreview(b.pdfBlob, document.getElementById("compareCanvasB"));
+    }
+
+    function buildDiffRows(dimA, dimB) {
+      const aMap = new Map(dimA.map(d => [d.name, d.value]));
+      const bMap = new Map(dimB.map(d => [d.name, d.value]));
+      const names = unique([...aMap.keys(), ...bMap.keys()]).sort((x, y) =>
+        x.localeCompare(y, undefined, { numeric: true })
+      );
+
+      return names.map(name => {
+        const valueA = aMap.get(name);
+        const valueB = bMap.get(name);
+        let status = "missing";
+        if (valueA !== undefined && valueB !== undefined) status = valueA === valueB ? "same" : "changed";
+        return { name, valueA, valueB, status };
+      });
+    }
+
+    async function renderComparePreview(blob, canvas) {
+      if (!blob || !canvas) return;
+      try {
+        const data = await blobToUint8Array(blob);
+        const pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+        const page = await pdfDoc.getPage(1);
+        const viewport = page.getViewport({ scale: 0.58 });
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: canvas.getContext("2d"),
+          viewport
+        }).promise;
+      } catch (error) {
+        console.error("Compare preview error:", error);
+      }
+    }
+
+    function populateFilterOptions() {
+      const frames = unique(state.drawings.map(d => d.frame).filter(Boolean)).sort();
+      const revisions = unique(state.drawings.map(d => d.revision).filter(Boolean)).sort();
+
+      el.filterFrame.innerHTML = `<option value="">All Frames</option>` +
+        frames.map(frame => `<option value="${escapeHtml(frame)}">${escapeHtml(frame)}</option>`).join("");
+
+      el.filterRevision.innerHTML = `<option value="">All Revisions</option>` +
+        revisions.map(rev => `<option value="${escapeHtml(rev)}">${escapeHtml(rev)}</option>`).join("");
+    }
+
+    function getFilteredDrawings() {
+      return state.drawings.filter(d => {
+        const numberMatch = normalize(d.drawingNumber).includes(normalize(el.filterDrawing.value));
+        const frameMatch = !el.filterFrame.value || d.frame === el.filterFrame.value;
+        const revisionMatch = !el.filterRevision.value || d.revision === el.filterRevision.value;
+        const descMatch = normalize(d.description).includes(normalize(el.filterDescription.value));
+        const dateMatch = normalize(d.date).includes(normalize(el.filterDate.value));
+
+        const dimNameQ = normalize(el.filterDimensionName.value);
+        const dimValueQ = normalize(el.filterDimensionValue.value);
+
+        const dimensionNameMatch = !dimNameQ || (d.dimensions || []).some(dim =>
+          normalize(dim.name).includes(dimNameQ)
+        );
+
+        const dimensionValueMatch = !dimValueQ ||
+          (d.dimensions || []).some(dim => normalize(dim.value).includes(dimValueQ)) ||
+          (d.generalDimensions || []).some(value => normalize(value).includes(dimValueQ));
+
+        return numberMatch && frameMatch && revisionMatch && descMatch && dateMatch && dimensionNameMatch && dimensionValueMatch;
+      });
+    }
+
+    function renderDatabase() {
+      const records = getFilteredDrawings();
+
+      if (!records.length) {
+        el.databaseBody.innerHTML = `<tr><td colspan="6" class="empty-row">No drawings match the current filters.</td></tr>`;
+        return;
+      }
+
+      el.databaseBody.innerHTML = records.map(d => `
+        <tr>
+          <td><strong>${escapeHtml(d.drawingNumber || "-")}</strong></td>
+          <td>${escapeHtml(d.frame || "-")}</td>
+          <td>${escapeHtml(d.revision || "-")}</td>
+          <td>${escapeHtml(d.description || "-")}</td>
+          <td>${formatDateTime(d.uploadDateISO)}</td>
+          <td>
+            <div class="action-group">
+              <button class="btn btn-secondary btn-sm" data-db-action="open" data-id="${d.id}">Open</button>
+              <button class="btn btn-secondary btn-sm" data-db-action="compare" data-id="${d.id}">Compare</button>
+              <button class="btn btn-secondary btn-sm" data-db-action="download" data-id="${d.id}">Download</button>
+              <button class="btn btn-danger btn-sm" data-db-action="delete" data-id="${d.id}">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function handleDatabaseActions(event) {
+      const btn = event.target.closest("[data-db-action]");
+      if (!btn) return;
+
+      const id = btn.dataset.id;
+      const action = btn.dataset.dbAction;
+      const drawing = state.drawings.find(d => d.id === id);
+
+      if (!drawing) {
+        toast("No Drawing Found.", "error");
+        return;
+      }
+
+      if (action === "open") {
+        openDetail(id);
+        return;
+      }
+
+      if (action === "compare") {
+        openCompareWith(id);
+        toast("Drawing sent to Compare page.", "info");
+        return;
+      }
+
+      if (action === "download") {
+        downloadBlob(drawing.pdfBlob, drawing.fileName || `${drawing.drawingNumber}.pdf`);
+        return;
+      }
+
+      if (action === "delete") {
+        const ok = confirm(`Delete drawing ${drawing.drawingNumber}?`);
+        if (!ok) return;
+        await deleteDrawingRecord(id);
+        state.drawings = await getAllDrawings();
+        renderAll();
+        toast(`Deleted ${drawing.drawingNumber}.`, "success");
+      }
+    }
+
+    function exportCSV() {
+      if (!state.drawings.length) {
+        toast("No data available for export.", "error");
+        return;
+      }
+
+      const headers = [
+        "Drawing Number", "Frame", "Revision", "Description", "Date",
+        "Approved By", "Designer", "Upload Date", "Dimensions", "General Dimensions", "File Name"
+      ];
+
+      const rows = state.drawings.map(d => [
+        d.drawingNumber || "",
+        d.frame || "",
+        d.revision || "",
+        d.description || "",
+        d.date || "",
+        d.approvedBy || "",
+        d.designer || "",
+        formatDateTime(d.uploadDateISO),
+        (d.dimensions || []).map(x => `${x.name}:${x.value}`).join(" | "),
+        (d.generalDimensions || []).join(" | "),
+        d.fileName || ""
+      ]);
+
+      const csv = [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
+      downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8;" }), `motor-outline-database-${dateStamp()}.csv`);
+    }
+
+    function exportExcel() {
+      if (!state.drawings.length) {
+        toast("No data available for export.", "error");
+        return;
+      }
+
+      const body = state.drawings.map(d => `
+        <tr>
+          <td>${escapeHtml(d.drawingNumber || "")}</td>
+          <td>${escapeHtml(d.frame || "")}</td>
+          <td>${escapeHtml(d.revision || "")}</td>
+          <td>${escapeHtml(d.description || "")}</td>
+          <td>${escapeHtml(d.date || "")}</td>
+          <td>${escapeHtml(d.approvedBy || "")}</td>
+          <td>${escapeHtml(d.designer || "")}</td>
+          <td>${escapeHtml(formatDateTime(d.uploadDateISO))}</td>
+          <td>${escapeHtml((d.dimensions || []).map(x => `${x.name}:${x.value}`).join(" | "))}</td>
+          <td>${escapeHtml((d.generalDimensions || []).join(" | "))}</td>
+          <td>${escapeHtml(d.fileName || "")}</td>
+        </tr>
+      `).join("");
+
+      const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office"
+              xmlns:x="urn:schemas-microsoft-com:office:excel"
+              xmlns="http://www.w3.org/TR/REC-html40">
+          <head><meta charset="UTF-8"></head>
+          <body>
+            <table border="1">
+              <thead>
+                <tr>
+                  <th>Drawing Number</th>
+                  <th>Frame</th>
+                  <th>Revision</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Approved By</th>
+                  <th>Designer</th>
+                  <th>Upload Date</th>
+                  <th>Dimensions</th>
+                  <th>General Dimensions</th>
+                  <th>File Name</th>
+                </tr>
+              </thead>
+              <tbody>${body}</tbody>
+            </table>
+          </body>
+        </html>
+      `;
+
+      downloadBlob(new Blob([html], { type: "application/vnd.ms-excel" }), `motor-outline-database-${dateStamp()}.xls`);
+    }
+
+    async function exportJSON() {
+      if (!state.drawings.length) {
+        toast("No data available for export.", "error");
+        return;
+      }
+
+      showLoading(true);
+
+      try {
+        const records = [];
+        for (const d of state.drawings) {
+          records.push({
+            ...d,
+            pdfDataUrl: d.pdfBlob ? await blobToDataURL(d.pdfBlob) : null,
+            pdfBlob: undefined
+          });
+        }
+
+        const payload = {
+          app: "Motor Outline Dimension Database",
+          version: 2,
+          exportedAt: new Date().toISOString(),
+          records
+        };
+
+        downloadBlob(
+          new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
+          `motor-outline-database-${dateStamp()}.json`
+        );
+      } catch (error) {
+        console.error(error);
+        toast("JSON export failed.", "error");
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function printDatabase() {
+      if (!state.drawings.length) {
+        toast("No data available for print.", "error");
+        return;
+      }
+
+      const w = window.open("", "_blank");
+      if (!w) return;
+
+      const rows = state.drawings.map(d => `
+        <tr>
+          <td>${escapeHtml(d.drawingNumber || "")}</td>
+          <td>${escapeHtml(d.frame || "")}</td>
+          <td>${escapeHtml(d.revision || "")}</td>
+          <td>${escapeHtml(d.description || "")}</td>
+          <td>${escapeHtml(d.date || "")}</td>
+          <td>${escapeHtml(formatDateTime(d.uploadDateISO))}</td>
+        </tr>
+      `).join("");
+
+      w.document.write(`
+        <html>
+          <head>
+            <title>Motor Outline Dimension Database</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 24px; color: #111; }
+              h1 { color: #003366; margin-bottom: 4px; }
+              p { margin-top: 0; color: #555; }
+              table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+              th, td { border: 1px solid #bbb; padding: 8px; text-align: left; }
+              th { background: #e9f0f7; }
+            </style>
+          </head>
+          <body>
+            <h1>Motor Outline Dimension Database</h1>
+            <p>Developed for Engineering Drawing Management</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Drawing Number</th>
+                  <th>Frame</th>
+                  <th>Revision</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Upload Date</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </body>
+        </html>
+      `);
+
+      w.document.close();
+      w.focus();
+      w.print();
+    }
+
+    async function importDatabase(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      showLoading(true);
+
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        const records = Array.isArray(parsed) ? parsed : (parsed.records || []);
+
+        if (!Array.isArray(records)) throw new Error("Invalid JSON format");
+
+        for (const record of records) {
+          const restored = { ...record };
+
+          if (record.pdfDataUrl) {
+            restored.pdfBlob = dataURLToBlob(record.pdfDataUrl);
+          }
+
+          delete restored.pdfDataUrl;
+          await saveDrawingRecord(restored);
+        }
+
+        state.drawings = await getAllDrawings();
+        renderAll();
+        toast("Database imported successfully.", "success");
+      } catch (error) {
+        console.error(error);
+        toast("Import failed. Please use a valid JSON export file.", "error");
+      } finally {
+        showLoading(false);
+        event.target.value = "";
+      }
+    }
+
+    async function clearDatabase() {
+      if (!state.drawings.length) {
+        toast("Database is already empty.", "info");
+        return;
+      }
+
+      const ok = confirm("Clear Database?\n\nThis will permanently remove all stored drawings from browser storage.");
+      if (!ok) return;
+
+      await clearAllRecords();
+      state.drawings = [];
+      renderAll();
+      el.uploadBody.innerHTML = `<tr><td colspan="7" class="empty-row">No uploads yet.</td></tr>`;
+      toast("Database cleared successfully.", "success");
+    }
+
+    function applyTheme(theme, persist = true) {
+      document.body.setAttribute("data-theme", theme);
+      el.themeButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.themeChoice === theme);
+      });
+
+      if (persist) {
+        localStorage.setItem(LOCAL_KEYS.THEME, theme);
+        toast(`Theme changed to ${capitalize(theme)} mode.`, "info");
+      }
+    }
+
+    function showLoading(show) {
+      el.loadingOverlay.classList.toggle("hidden", !show);
+    }
+
+    function toast(message, type = "info") {
+      const div = document.createElement("div");
+      div.className = `toast ${type}`;
+      div.innerHTML = `<strong>${capitalize(type)}</strong><div>${escapeHtml(message)}</div>`;
+      el.toastArea.appendChild(div);
+
+      setTimeout(() => {
+        div.style.opacity = "0";
+        div.style.transform = "translateY(8px)";
+      }, 2400);
+
+      setTimeout(() => div.remove(), 3000);
+    }
+
+    function debounce(fn, delay = 150) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    function normalize(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function unique(arr) {
+      return [...new Set(arr)];
+    }
+
+    function capitalize(str) {
+      const s = String(str || "");
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    function formatDateTime(iso) {
+      if (!iso) return "-";
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return iso;
+
+      return new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(d);
+    }
+
+    function csvEscape(value) {
+      return `"${String(value ?? "").replace(/"/g, '""')}"`;
+    }
+
+    function dateStamp() {
+      const d = new Date();
+      return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function escapeRegex(value) {
+      return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function cryptoId() {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      return "id-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function blobToUint8Array(blob) {
+      return blob.arrayBuffer().then(buffer => new Uint8Array(buffer));
+    }
+
+    function blobToDataURL(blob) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result);
+        r.onerror = reject;
+        r.readAsDataURL(blob);
+      });
+    }
+
+    function dataURLToBlob(dataUrl) {
+      const [prefix, base64] = dataUrl.split(",");
+      const mimeMatch = prefix.match(/data:(.*?);base64/);
+      const mime = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+      const bytes = atob(base64);
+      const len = bytes.length;
+      const arr = new Uint8Array(len);
+
+      for (let i = 0; i < len; i++) {
+        arr[i] = bytes.charCodeAt(i);
+      }
+
+      return new Blob([arr], { type: mime });
+    }
+  </script>
+</body>
+</html>
